@@ -1,9 +1,9 @@
 digraph {
 	"" [shape=none]
-	"" -> S8 [label=start]
+	"" -> S7 [label=start]
 	S7 [shape=circle]
-	S7 -> S9 [label=b]
+	S7 -> S8 [label=a]
 	S8 [shape=circle]
-	S8 -> S7 [label=a]
+	S8 -> S9 [label=b]
 	S9 [shape=doublecircle]
 }

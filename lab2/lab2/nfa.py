@@ -1,11 +1,13 @@
 import graphviz
-from lab2.state import *
+
+from lab2.state import State
+
 
 class NFA:
-    def __init__(self, states: list[State] = []):
-        self.states: list[State] = states
-        self.start_state: State = states[0] if states else None
-        self.accept_state: State = states[-1] if states else None
+    def __init__(self, states: list[State] | None = None):
+        self.states: list[State] = states if states is not None else []
+        self.start_state: State | None = states[0] if states else None
+        self.accept_state: State | None = states[-1] if states else None
 
     def add_state(self, state: State):
         """添加状态到NFA"""
@@ -19,7 +21,7 @@ class NFA:
         """添加接受状态"""
         self.accept_state = state
 
-    def epsilon_closure(self, states: list[State]) -> set[State]:
+    def epsilon_closure(self, states: set[State]) -> set[State]:
         """计算给定状态集的epsilon闭包"""
         stack = list(states)
         closure = set(stack)
@@ -32,8 +34,8 @@ class NFA:
                         stack.append(next_state)
         return closure
 
-    def move(self, states: list[State], input_char) -> set[State]:
-        """ 返回从给定状态集出发, 经过input_char可以到达的状态集 """
+    def move(self, states: set[State], input_char) -> set[State]:
+        """返回从给定状态集出发, 经过input_char可以到达的状态集"""
         next_states = set()
         for state in states:
             if input_char in state.transitions:
@@ -42,13 +44,14 @@ class NFA:
 
     def simulate(self, input_string: str):
         """模拟NFA处理输入字符串, 返回是否接受该字符串"""
-        current_states = self.epsilon_closure([self.start_state])
+        assert self.start_state is not None, "init first"
+        current_states = self.epsilon_closure({self.start_state})
         for char in input_string:
             next_states = set()
             for state in current_states:
                 if char in state.transitions:
                     for next_state in state.transitions[char]:
-                        next_states.update(self.epsilon_closure([next_state]))
+                        next_states.update(self.epsilon_closure({next_state}))
             current_states = next_states
         return self.accept_state in current_states
 
@@ -56,13 +59,13 @@ class NFA:
         """可视化NFA, 使用Graphviz"""
         dot = graphviz.Digraph()
         dot.node("", shape="none")
-        dot.edge("", str(self.start_state), label='start')
+        dot.edge("", str(self.start_state), label="start")
         states = [self.start_state]
         for state in self.states:
-            shape = 'doublecircle' if state == self.accept_state else 'circle'
+            shape = "doublecircle" if state == self.accept_state else "circle"
             dot.node(str(state), shape=shape)
             for char, states in state.transitions.items():
-                label = char if char is not None else 'ε'
+                label = char if char is not None else "ε"
                 for next_state in states:
                     dot.edge(str(state), str(next_state), label=label)
         dot.render(filename, format="png", view=False)

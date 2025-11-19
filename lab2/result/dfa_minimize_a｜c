@@ -1,0 +1,8 @@
+digraph {
+	"" [shape=none]
+	"" -> S19 [label=start]
+	S19 [shape=circle]
+	S19 -> S20 [label=a]
+	S19 -> S20 [label=c]
+	S20 [shape=doublecircle]
+}

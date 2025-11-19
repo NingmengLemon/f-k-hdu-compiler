@@ -1,5 +1,5 @@
-from lab2.nfa import *
-from lab2.state import *
+from lab2.nfa import NFA
+from lab2.state import State
 
 
 class Regex:
@@ -90,6 +90,7 @@ class Regex:
 
     def apply_closure(self, nfa: NFA):
         """实现闭包操作: NFA*"""
+        assert nfa.accept_state, "set accept_state for NFA first"
         start_state = State()
         accept_state = State()
         start_state.add_transition(None, nfa.start_state)
@@ -118,6 +119,9 @@ class Regex:
 
     def apply_union(self, nfa1: NFA, nfa2: NFA):
         """实现并联操作: NFA1 | NFA2"""
+        assert nfa1.accept_state is not None and nfa2.accept_state is not None, (
+            "set accept_state for NFAs first"
+        )
         start_state = State()
         accept_state = State()
         start_state.add_transition(None, nfa1.start_state)
@@ -128,6 +132,10 @@ class Regex:
 
     def apply_concatenation(self, nfa1: NFA, nfa2: NFA):
         """实现连接操作: NFA1 . NFA2"""
+        assert nfa1.accept_state is not None and nfa2.accept_state is not None, (
+            "set accept_state for NFAs first"
+        )
+        assert nfa1.start_state, "set start_state for NFA1 first"
         nfa1.accept_state.add_transition(None, nfa2.start_state)
         nfa = NFA(nfa1.states + nfa2.states)
         nfa.set_start_state(nfa1.start_state)

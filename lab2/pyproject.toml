@@ -3,6 +3,5 @@ name = "lab2"
 version = "0.1.0"
 description = "Compilation Principles lab 2"
 authors = [{ name = "focused_xy", email = "elpsycongroo242@gmail.com" }]
-dependencies = [
-    "graphviz>=0.21",
-]
+dependencies = ["graphviz>=0.21"]
+requires-python = "==3.12.*"
