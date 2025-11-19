@@ -1,18 +1,8 @@
-[tool.poetry]
+[project]
 name = "lab2"
 version = "0.1.0"
 description = "Compilation Principles lab 2"
-authors = ["focused_xy <elpsycongroo242@gmail.com>"]
-readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.12"
-graphviz = "^0.20.3"
-
-[tool.black]
-line-length = 88
-target-version = ['py38']
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+authors = [{ name = "focused_xy", email = "elpsycongroo242@gmail.com" }]
+dependencies = [
+    "graphviz>=0.21",
+]
