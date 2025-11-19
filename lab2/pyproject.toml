@@ -5,3 +5,13 @@ description = "Compilation Principles lab 2"
 authors = [{ name = "focused_xy", email = "elpsycongroo242@gmail.com" }]
 dependencies = ["graphviz>=0.21"]
 requires-python = "==3.12.*"
+
+[dependency-groups]
+dev = ["mypy>=1.18.2"]
+
+[tool.mypy]
+follow_imports = "normal"
+disable_error_code = ["import-untyped"]
+ignore_missing_imports = true
+show_column_numbers = true
+check_untyped_defs = true

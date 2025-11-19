@@ -1,3 +1,5 @@
+from collections.abc import Sequence
+
 import graphviz
 
 from lab2.state import State
@@ -60,7 +62,7 @@ class NFA:
         dot = graphviz.Digraph()
         dot.node("", shape="none")
         dot.edge("", str(self.start_state), label="start")
-        states = [self.start_state]
+        states: Sequence[State | None] = [self.start_state]
         for state in self.states:
             shape = "doublecircle" if state == self.accept_state else "circle"
             dot.node(str(state), shape=shape)

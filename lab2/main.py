@@ -1,3 +1,5 @@
+import os
+
 from lab2 import DFA, Regex
 
 
@@ -38,6 +40,7 @@ def main():
         nfa = regex.to_nfa()
         dfa = DFA(nfa)
         mini_dfa = dfa.minimize()
+        os.makedirs("result", exist_ok=True)
         nfa.visualize("result/nfa_" + replace_char_to_fw(pattern))
         dfa.visualize("result/dfa_" + replace_char_to_fw(pattern))
         mini_dfa.visualize("result/dfa_minimize_" + replace_char_to_fw(pattern))

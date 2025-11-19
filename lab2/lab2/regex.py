@@ -4,40 +4,39 @@ from lab2.state import State
 
 class Regex:
     def __init__(self, pattern: str):
-        def add_explicit_concat_operator(expression: str):
-            """添加显示连接符号"""
-            output = []
-            unaryOperators = {"*", "+", "?"}
-            binaryOperators = {"|"}
-            operators = unaryOperators.union(binaryOperators)
-            for i in range(len(expression) - 1):
-                output.append(expression[i])
-                assert not (
-                    expression[i] in unaryOperators
-                    and expression[i + 1] in unaryOperators
-                )
-                assert not (
-                    expression[i] in binaryOperators
-                    and expression[i + 1] in binaryOperators
-                )
-                assert not (
-                    expression[i] in binaryOperators
-                    and expression[i + 1] in unaryOperators
-                )
-                if (expression[i] not in binaryOperators and expression[i] != "(") and (
-                    expression[i + 1] not in operators and expression[i + 1] != ")"
-                ):
-                    output.append(".")
-            output.append(expression[-1])
-            return "".join(output)
+        self.pattern: str = self._add_explicit_concat_operator(pattern)
 
-        self.pattern: str = add_explicit_concat_operator(pattern)
+    @staticmethod
+    def _add_explicit_concat_operator(expression: str):
+        """添加显示连接符号"""
+        output = []
+        unaryOperators = {"*", "+", "?"}
+        binaryOperators = {"|"}
+        operators = unaryOperators.union(binaryOperators)
+        for i in range(len(expression) - 1):
+            output.append(expression[i])
+            assert not (
+                expression[i] in unaryOperators and expression[i + 1] in unaryOperators
+            )
+            assert not (
+                expression[i] in binaryOperators
+                and expression[i + 1] in binaryOperators
+            )
+            assert not (
+                expression[i] in binaryOperators and expression[i + 1] in unaryOperators
+            )
+            if (expression[i] not in binaryOperators and expression[i] != "(") and (
+                expression[i + 1] not in operators and expression[i + 1] != ")"
+            ):
+                output.append(".")
+        output.append(expression[-1])
+        return "".join(output)
 
     def to_postfix(self):
         """将正则表达式转换为后缀表达式"""
         precedence = {".": 2, "|": 1}  # '.'表示连接操作
-        output = []
-        stack = []
+        output: list[str] = []
+        stack: list[str] = []
         for char in self.pattern:
             if char in precedence:
                 while (
