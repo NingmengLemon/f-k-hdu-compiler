@@ -3,7 +3,7 @@ class TrieNode:
         self.children: dict[str, TrieNode] = {}
         self.isEnd: bool = isEnd
 
-    def find_child(self, symbal: str) -> "TrieNode":
+    def find_child(self, symbal: str) -> "TrieNode | None":
         return self.children.get(symbal)
 
 
@@ -25,7 +25,7 @@ class Trie:
         curNode.isEnd = True
 
     def get_prefixes(self) -> list[list[str]]:
-        def get_prefix(symbal: str, node: TrieNode) -> list[str]:
+        def get_prefix(symbal: str, node: TrieNode) -> list[str] | None:
             prefix = [symbal]
             curNode = node
             while len(curNode.children) == 1 and not curNode.isEnd:
@@ -60,4 +60,3 @@ class Trie:
         for i in range(peers):
             childSym, childNode = next(children)
             display_help(childSym, childNode, prefix, i == peers - 1)
-

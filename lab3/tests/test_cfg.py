@@ -1,5 +1,4 @@
-import pytest
-from lab3 import *
+from lab3 import CFG
 
 
 def test_cfg_eliminate_left_recursion1():
@@ -254,10 +253,10 @@ def test_is_ll1_1():
         for prod in productions:
             selectSet = cfg.compute_select_of_production(nonterminalSym, prod)
             print(
-                f"SELECT({nonterminalSym} -> {" ".join(prod)}) = {{{", ".join(selectSet)}}}"
+                f"SELECT({nonterminalSym} -> {' '.join(prod)}) = {{{', '.join(selectSet)}}}"
             )
 
-    assert cfg.is_ll1() == False
+    assert cfg.is_ll1() is False
 
 
 def test_is_ll1_2():
@@ -278,10 +277,10 @@ def test_is_ll1_2():
         for prod in productions:
             selectSet = cfg.compute_select_of_production(nonterminalSym, prod)
             print(
-                f"SELECT({nonterminalSym} -> {" ".join(prod)}) = {{{", ".join(selectSet)}}}"
+                f"SELECT({nonterminalSym} -> {' '.join(prod)}) = {{{', '.join(selectSet)}}}"
             )
 
-    assert cfg.is_ll1() == True
+    assert cfg.is_ll1() is True
 
 
 def test_construct_predictive_table1():
@@ -300,14 +299,15 @@ def test_construct_predictive_table1():
         for prod in productions:
             selectSet = cfg.compute_select_of_production(nonterminalSym, prod)
             print(
-                f"SELECT({nonterminalSym} -> {" ".join(prod)}) = {{{", ".join(selectSet)}}}"
+                f"SELECT({nonterminalSym} -> {' '.join(prod)}) = {{{', '.join(selectSet)}}}"
             )
 
     print("预测分析表:")
     predictiveTable = cfg.construct_predictive_table()
     print(predictiveTable)
 
-    assert cfg.is_ll1() == True
+    assert cfg.is_ll1() is True
+
 
 def test_construct_predictive_table2():
     cfg = CFG(False)
@@ -325,11 +325,11 @@ def test_construct_predictive_table2():
         for prod in productions:
             selectSet = cfg.compute_select_of_production(nonterminalSym, prod)
             print(
-                f"SELECT({nonterminalSym} -> {" ".join(prod)}) = {{{", ".join(selectSet)}}}"
+                f"SELECT({nonterminalSym} -> {' '.join(prod)}) = {{{', '.join(selectSet)}}}"
             )
 
     print("预测分析表:")
     predictiveTable = cfg.construct_predictive_table()
     print(predictiveTable)
 
-    assert cfg.is_ll1() == False
+    assert cfg.is_ll1() is False

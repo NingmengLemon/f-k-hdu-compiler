@@ -1,18 +1,22 @@
-[tool.poetry]
+[project]
 name = "lab3"
 version = "0.1.0"
 description = "Compilation Principles lab 3"
-authors = ["focused_xy <elpsycongroo242@gmail.com>"]
+authors = [{ name = "focused_xy", email = "elpsycongroo242@gmail.com" }]
 readme = "README.md"
+requires-python = "==3.12.*"
 
-[tool.poetry.dependencies]
-python = "^3.12"
+[dependency-groups]
+dev = [
+    "ipykernel>=7.1.0",
+    "mypy>=1.18.2",
+    "pytest>=9.0.1",
+    "pytest-cov>=7.0.0",
+]
 
-
-[tool.poetry.group.test.dependencies]
-pytest = "^8.3.3"
-pytest-random = "^0.2"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.mypy]
+follow_imports = "normal"
+disable_error_code = ["import-untyped"]
+ignore_missing_imports = true
+show_column_numbers = true
+check_untyped_defs = true

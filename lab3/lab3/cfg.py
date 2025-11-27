@@ -1,10 +1,10 @@
-from .trie import *
+from .trie import Trie
 
 
 class CFG:
     def __init__(self, read=False):
         self.terminalSyms: set[str] = set()  # 终结符号集
-        self.startSym: str = None  # 开始符号
+        self.startSym: str | None = None  # 开始符号
         self.grammar: dict[str, list[list[str]]] = {}  # 产生式
         self.firstSets: dict[str, set[str]] = {}  # FIRST 集
         self.followSets: dict[str, set[str]] = {}  # FOLLOW 集
@@ -22,9 +22,9 @@ class CFG:
                 assert len(self.startSym) == 1
                 break
             except AssertionError:
-                print("\033[31m上下文无关语法有且仅有一个开始符号\033[0m")
+                print("上下文无关语法有且仅有一个开始符号")
         symbal.add(self.startSym)
-        print(f"\033[32m已读取开始符号: '{self.startSym}'\033[0m")
+        print(f"已读取开始符号: '{self.startSym}'")
 
         print("请输入文法（使用 'END' 来结束输入）: ")
         while True:
@@ -41,12 +41,12 @@ class CFG:
                 try:
                     assert len(self.startSym) == 1
                 except AssertionError:
-                    print("\033[31m上下文无关语法产生式左侧只能有一个非总结符号\033[0m")
-                productions = [prod.split() for prod in productions.split("|")]
+                    print("上下文无关语法产生式左侧只能有一个非总结符号")
+                prods = [prod.split() for prod in productions.split("|")]
                 print(
-                    f"\033[32m已读取产生式: {non_terminal} -> {" | ".join([" ".join(prod) for prod in productions])}\033[0m"
+                    f"已读取产生式: {non_terminal} -> {' | '.join([' '.join(prod) for prod in prods])}"
                 )
-                self.add_rule(non_terminal, productions)
+                self.add_rule(non_terminal, prods)
 
     def set_start(self, startSym: str) -> None:
         """设置文法开始符号"""
@@ -205,6 +205,7 @@ class CFG:
         # 初始化所有非终结符的 FOLLOW 集
         for nonterminal in self.grammar.keys():
             self.followSets[nonterminal] = set()
+        assert self.startSym is not None
         self.followSets[self.startSym].add("$")  # $ 为输入的结束符
 
         # 迭代直到所有 FOLLOW 集不再变化
@@ -269,13 +270,14 @@ class CFG:
             if len(productions) == 1:
                 continue
 
-            selectSet: set[str] = None
+            selectSet: set[str] | None = None
             for index, production in enumerate(productions):
                 newSelectSet = self.compute_select_of_production(
                     nonterminalSym, production
                 )
                 if index == 0:
                     selectSet = newSelectSet
+                assert selectSet is not None
                 selectSet.intersection_update(newSelectSet)
             if selectSet:
                 return False
@@ -304,16 +306,17 @@ class CFG:
         if not self.predictiveTable:
             self.construct_predictive_table()
         if not self.is_ll1():
-            print("\033[31m该文法不是LL(1)文法\033[0m")
+            print("该文法不是LL(1)文法")
             return False
 
+        assert self.startSym is not None
         stack: list[str] = ["$", self.startSym]
         print("初始分析栈:", stack)
         inputStr.append("$")
         while stack:
             top = stack.pop()
             curSym = inputStr[0]
-            action: str = None
+            action: str | None = None
             if top in self.terminalSyms | {"$"}:
                 if top == curSym:
                     action = f"match: '{curSym}'"
@@ -327,18 +330,18 @@ class CFG:
                     for sym in reversed(production):
                         if sym != "ε":
                             stack.append(sym)
-                    action = f"{top} -> {" ".join(production)}"
+                    action = f"{top} -> {' '.join(production)}"
                 else:
                     return False
 
-            print(f"分析栈: {stack}, 输入串: '{" ".join(inputStr)}', 动作: {action}")
+            print(f"分析栈: {stack}, 输入串: '{' '.join(inputStr)}', 动作: {action}")
 
         return True
 
     def display(self):
         print(f"开始符号: '{self.startSym}'")
-        print(f"非终结符号集: [{", ".join(self.grammar.keys())}]")
-        print(f"终结符号集: [{", ".join(self.terminalSyms)}]")
+        print(f"非终结符号集: [{', '.join(self.grammar.keys())}]")
+        print(f"终结符号集: [{', '.join(self.terminalSyms)}]")
         print("产生式:")
         for nonterminalSym in self.grammar:
             productions = " | ".join(
@@ -364,8 +367,8 @@ class CFG:
             print("预测分析表:")
             for nonterminal, rules in self.predictiveTable.items():
                 print(f"{nonterminal}:")
-                for terminal, productions in rules.items():
-                    if len(productions):
+                for terminal, prods in rules.items():
+                    if len(prods):
                         print(f"\t{terminal}:")
-                    for prod in productions:
-                        print(f"\t\t{nonterminal} -> {" ".join(prod)}")
+                    for prod in prods:
+                        print(f"\t\t{nonterminal} -> {' '.join(prod)}")

@@ -1,5 +1,4 @@
-from lab3 import *
-import pytest
+from lab3 import Trie
 
 
 def test_insert():
@@ -7,10 +6,11 @@ def test_insert():
     trie.insert(["c", "a", "t"])
     print("")
     trie.display()
-    assert trie.rootNode.find_child("c") is not None
-    assert trie.rootNode.find_child("c").find_child("a") is not None
-    assert trie.rootNode.find_child("c").find_child("a").find_child("t") is not None
-    assert trie.rootNode.find_child("c").find_child("a").find_child("t").isEnd is True
+    assert trie.rootNode
+    assert (child := trie.rootNode.find_child("c")) is not None
+    assert (child := child.find_child("a")) is not None
+    assert (child := child.find_child("t")) is not None
+    assert child.isEnd is True
 
 
 def test_get_prefixes():
